@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Velocity Escape</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+      <!-- Loading Overlay -->
+      <div id="loading-screen" class="overlay">
+        <div class="loader"></div>
+        <p>INITIALIZING SYSTEMS...</p>
+      </div>
+
+      <!-- Main Menu -->
+      <div id="main-menu" class="overlay">
+        <div class="menu-header-pro">
+          <div id="more-btn" class="pause-box" style="cursor:pointer;">⋮</div>
+          <div class="currency-box">
+            <span id="total-coins-menu">0</span>
+            <span class="coin-icon-pro">●</span>
+          </div>
+        </div>
+        <div class="menu-content">
+          <h1 class="game-title">VELOCITY<br>ESCAPE</h1>
+          <button id="play-btn" class="primary-btn-pro">TAP TO PLAY</button>
+          <div class="menu-actions-pro">
+            <button id="shop-btn" class="shop-btn-pro">ME</button>
+            <div class="high-score-box">
+              <span class="label">TOP RUN</span>
+              <span id="high-score-menu">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shop Menu -->
+      <div id="shop-menu" class="overlay hidden">
+        <div class="menu-header-pro">
+          <button id="back-to-menu-btn" class="pause-box">←</button>
+          <div class="currency-box">
+            <span id="total-coins-shop">0</span>
+            <span class="coin-icon-pro">●</span>
+          </div>
+        </div>
+        <div class="shop-content">
+          <div class="shop-tabs">
+            <button id="avatar-tab-btn" class="tab-btn active">CHARACTERS</button>
+            <button id="skateboard-tab-btn" class="tab-btn">BOARDS</button>
+          </div>
+          <div id="avatar-list" class="avatar-grid-pro"></div>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu (for 3 dots) -->
+      <div id="sidebar-menu" class="sidebar hidden">
+        <div class="sidebar-header">
+          <button id="close-sidebar-btn" class="close-btn">×</button>
+        </div>
+        <div class="sidebar-links">
+          <button id="sidebar-avatar-btn" class="sidebar-link">AVATARS</button>
+          <button id="sidebar-skateboard-btn" class="sidebar-link">SKATEBOARDS</button>
+        </div>
+      </div>
+
+      <!-- Game HUD (Subway Style) -->
+      <div id="hud" class="hidden">
+        <div class="hud-left">
+          <div class="pause-box" id="hud-pause-btn" style="cursor:pointer;">II</div>
+          <div class="speed-box">
+            <span id="speed-val">50</span>
+            <span class="speed-unit">KM/H</span>
+          </div>
+        </div>
+        <div class="hud-right">
+          <div class="multiplier">x30</div>
+          <div class="score-box">
+            <span id="score-val">000000</span>
+          </div>
+          <div class="coin-box">
+            <span id="coins-val">0</span>
+            <span class="coin-icon-pro">●</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pause Overlay -->
+      <div id="pause-overlay" class="overlay hidden">
+        <div class="pause-card">
+          <h1 class="subway-title" style="font-size:2.5rem; margin-bottom:1.5rem;">PAUSED</h1>
+          <button id="pause-resume-btn" class="primary-btn-pro" style="margin-bottom:0.8rem; width: 100%; max-width:260px;">▶ RESUME</button>
+          <button id="pause-quit-btn" class="secondary-btn-pro" style="width: 100%; max-width:260px;">🏠 QUIT</button>
+        </div>
+      </div>
+
+      <!-- Game Over -->
+      <div id="game-over" class="overlay hidden">
+        <div class="game-over-card-pro">
+          <h1 class="subway-title">HIGH SCORE!</h1>
+          <div class="result-stats-pro">
+            <div class="res-item">
+              <div class="label">SCORE</div>
+              <div id="final-score" class="val">0</div>
+            </div>
+            <div class="res-item">
+              <div class="label">COINS</div>
+              <div id="final-coins" class="val">0</div>
+            </div>
+          </div>
+          <div class="action-row">
+            <button id="revive-btn" class="primary-btn-pro" style="background: #e74c3c; color: white">REVIVE (100 ●)</button>
+            <button id="restart-btn" class="primary-btn-pro">REPLAY</button>
+            <button id="menu-btn" class="secondary-btn-pro">HOME</button>
+          </div>
+        </div>
+      </div>
+
+      <canvas id="game-canvas"></canvas>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
