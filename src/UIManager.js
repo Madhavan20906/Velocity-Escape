@@ -11,6 +11,8 @@ export class UIManager {
         this.shopMenu = document.getElementById('shop-menu');
         this.hud = document.getElementById('hud');
         this.gameOver = document.getElementById('game-over');
+        this.leaderboardMenu = document.getElementById('leaderboard-menu');
+        this.leaderboardList = document.getElementById('leaderboard-list');
 
         // Menu stats
         this.totalCoinsMenu = document.getElementById('total-coins-menu');
@@ -101,6 +103,25 @@ export class UIManager {
             this.updateTabs();
             this.renderShop();
         };
+
+        // Leaderboard events
+        document.getElementById('sidebar-leaderboard-btn').onclick = () => {
+            this.hideSidebar();
+            this.showLeaderboard();
+        };
+
+        document.getElementById('back-from-leaderboard-btn').onclick = () => {
+            this.showMenu();
+        };
+
+        const nameInput = document.getElementById('player-name-input');
+        if (nameInput) {
+            nameInput.value = StorageManager.getPlayerName();
+            nameInput.onchange = (e) => {
+                StorageManager.setPlayerName(e.target.value);
+                StorageManager.syncData();
+            };
+        }
     }
 
     showSidebar() {
@@ -393,8 +414,49 @@ export class UIManager {
         this.updateMenuStats();
         this.mainMenu.classList.remove('hidden');
         this.shopMenu.classList.add('hidden');
+        this.leaderboardMenu.classList.add('hidden');
         this.gameOver.classList.add('hidden');
         this.hud.classList.add('hidden');
+    }
+
+    async showLeaderboard() {
+        this.mainMenu.classList.add('hidden');
+        this.leaderboardMenu.classList.remove('hidden');
+        this.leaderboardList.innerHTML = '<div style="text-align:center; padding:2rem; color:#888;">LOADING TOP RUNNERS...</div>';
+        
+        const scores = await StorageManager.getLeaderboard();
+        this.renderLeaderboard(scores);
+    }
+
+    renderLeaderboard(scores) {
+        this.leaderboardList.innerHTML = '';
+        if (scores.length === 0) {
+            this.leaderboardList.innerHTML = '<div style="text-align:center; padding:2rem; color:#888;">NO SCORES YET. BE THE FIRST!</div>';
+            return;
+        }
+
+        scores.forEach((item, index) => {
+            const entry = document.createElement('div');
+            const isMe = item.userId === StorageManager.getUserId();
+            entry.style.cssText = `
+                display: flex; align-items: center; gap: 1rem;
+                background: ${isMe ? 'rgba(0,255,170,0.1)' : 'rgba(255,255,255,0.05)'};
+                padding: 1rem; border-radius: 12px;
+                border: 1px solid ${isMe ? '#00ffaa44' : 'rgba(255,255,255,0.1)'};
+            `;
+
+            const rankColor = index === 0 ? '#f1c40f' : (index === 1 ? '#bdc3c7' : (index === 2 ? '#cd7f32' : '#888'));
+            
+            entry.innerHTML = `
+                <div style="font-weight:900; color:${rankColor}; width:30px;">#${index + 1}</div>
+                <div style="flex-grow:1;">
+                    <div style="font-weight:700; font-size:1rem;">${item.name || 'Anonymous'} ${isMe ? '<span style="font-size:0.6rem; background:#00ffaa; color:#000; padding:2px 4px; border-radius:4px; vertical-align:middle; margin-left:5px;">YOU</span>' : ''}</div>
+                    <div style="font-size:0.7rem; color:#666;">${new Date(item.date).toLocaleDateString()}</div>
+                </div>
+                <div style="font-weight:900; font-size:1.2rem; color:#00f2ff;">${Math.floor(item.score).toString().padStart(6, '0')}</div>
+            `;
+            this.leaderboardList.appendChild(entry);
+        });
     }
 
     startGame() {

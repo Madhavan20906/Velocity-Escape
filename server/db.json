@@ -1,0 +1,33 @@
+{
+  "leaderboard": [
+    {
+      "name": "Player1",
+      "score": 1200,
+      "userId": "user_123",
+      "date": "2026-05-01T11:31:35.816Z"
+    }
+  ],
+  "users": {
+    "user_123": {
+      "coins": 500,
+      "unlockedAvatars": [
+        "neon_core",
+        "gold_striker"
+      ],
+      "lastUpdated": "2026-05-01T11:31:35.828Z"
+    },
+    "user_1cr4jaink": {
+      "coins": 275,
+      "unlockedAvatars": [
+        "neon_core",
+        "knight"
+      ],
+      "unlockedSkateboards": [
+        "basic_board"
+      ],
+      "highScore": 709,
+      "playerName": "Madhavan",
+      "lastUpdated": "2026-05-01T11:36:36.675Z"
+    }
+  }
+}
