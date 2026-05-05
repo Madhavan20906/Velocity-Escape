@@ -22,7 +22,7 @@ export class TrackManager {
     createEnvironment() {
         const loader = new THREE.TextureLoader();
         const backgroundTexture = loader.load('/background.png');
-        backgroundTexture.encoding = THREE.sRGBEncoding;
+        backgroundTexture.colorSpace = THREE.SRGBColorSpace;
 
         const skyGeo = new THREE.SphereGeometry(450, 64, 64);
         this.skyMat = new THREE.MeshBasicMaterial({ 
