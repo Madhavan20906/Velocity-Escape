@@ -177,8 +177,6 @@ app.get('/api/leaderboard/:category', (req, res) => {
     res.json(list.slice(0, 10));
 });
 
-const PORT = process.env.PORT || 3001;
-
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Velocity Escape Backend is live on port ${PORT}`);
 });
