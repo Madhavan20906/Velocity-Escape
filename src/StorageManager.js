@@ -14,7 +14,7 @@ export class StorageManager {
     static get API_URL() {
         // --- CONFIGURATION ---
         // Replace the string below with your Render/Cloud URL once deployed!
-        const CLOUD_URL = ''; 
+        const CLOUD_URL = 'https://velocity-escape.onrender.com';
         // ---------------------
 
         if (CLOUD_URL) return CLOUD_URL + '/api';
