@@ -485,9 +485,164 @@ body, html {
   color: #00f2ff;
 }
 
-.subway-title {
-  font-family: 'Outfit', sans-serif;
+/* Auth Modal Styling (Fixed & Revamped) */
+.auth-card {
+  margin: auto;
+  background: linear-gradient(135deg, rgba(20, 20, 35, 0.98) 0%, rgba(10, 10, 20, 1) 100%);
+  backdrop-filter: blur(30px);
+  border: 2px solid rgba(0, 242, 255, 0.2);
+  padding: 3rem 2rem;
+  border-radius: 35px;
+  width: 90%;
+  max-width: 400px;
+  min-height: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9), 0 0 50px rgba(0, 242, 255, 0.15);
+  text-align: center;
+  position: relative;
+  z-index: 1000;
+  animation: modalFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.auth-header {
+  margin-bottom: 2rem;
+}
+
+.auth-header h2 {
+  margin: 0;
+  font-size: 2rem;
   font-weight: 900;
+  letter-spacing: -1px;
   color: #fff;
-  text-shadow: 0 0 20px rgba(255,255,255,0.15);
+  text-transform: uppercase;
+  text-shadow: 0 0 15px rgba(0, 242, 255, 0.6);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.auth-form.hidden {
+  display: none; /* Use none instead of hidden class to remove from flow */
+}
+
+.auth-input-container {
+  width: 100%;
+}
+
+.auth-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  padding: 1.1rem 1.4rem;
+  border-radius: 16px;
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.auth-input:focus {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #00f2ff;
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
+}
+
+.auth-submit-btn {
+  background: #00f2ff;
+  color: #000;
+  border: none;
+  padding: 1.1rem;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.auth-submit-btn:hover {
+  background: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 242, 255, 0.3);
+}
+
+.auth-switch {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 1.2rem;
+}
+
+.auth-switch span {
+  color: #00f2ff;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 5px;
+  text-decoration: underline;
+}
+
+.auth-divider {
+  margin: 1.5rem 0;
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.auth-divider::before, .auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 12px;
+}
+
+.guest-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  padding: 1rem;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.guest-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.auth-footer-note {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.3);
+  margin-top: 1.5rem;
+  line-height: 1.4;
+}
+
+/* Sidebar login button pulsate */
+#sidebar-login-btn {
+  animation: pulsateGlow 2s infinite;
+}
+
+@keyframes pulsateGlow {
+  0% { box-shadow: 0 0 5px rgba(0, 242, 255, 0.2); }
+  50% { box-shadow: 0 0 15px rgba(0, 242, 255, 0.5); }
+  100% { box-shadow: 0 0 5px rgba(0, 242, 255, 0.2); }
 }

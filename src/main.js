@@ -49,6 +49,12 @@ class Game {
         this.speedBoostTimer = 0;
 
         this.initEvents();
+        
+        // Show auth modal on startup if not logged in and not in guest mode
+        if (!StorageManager.isLoggedIn() && !localStorage.getItem('velocity_escape_guest_mode')) {
+            setTimeout(() => this.ui.showAuthModal('welcome'), 1500);
+        }
+
         requestAnimationFrame((t) => this.animate(t));
     }
 
@@ -295,7 +301,7 @@ class Game {
         if (this.gameState === 'GAMEOVER') return;
         this.gameState = 'GAMEOVER';
         StorageManager.addCoins(this.coinsCollected);
-        StorageManager.updateHighScore(Math.floor(this.score));
+        StorageManager.updateSessionStats(this.score, this.coinsCollected);
         this.ui.showGameOver(this.score, this.coinsCollected);
     }
 

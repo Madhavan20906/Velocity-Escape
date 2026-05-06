@@ -1,5 +1,19 @@
 apply plugin: 'com.android.application'
 
+configurations.all {
+    resolutionStrategy {
+        eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == 'org.jetbrains.kotlin') {
+                details.useVersion "1.8.22"
+            }
+        }
+        force "org.jetbrains.kotlin:kotlin-stdlib:1.8.22"
+    }
+    // Aggressive exclusion of jdk7 and jdk8 which cause duplicate class issues in 1.8.22
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+}
+
 android {
     namespace = "com.velocity.escape"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -44,6 +58,7 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.22"))
 }
 
 apply from: 'capacitor.build.gradle'

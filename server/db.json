@@ -1,33 +1,60 @@
 {
-  "leaderboard": [
+  "users": [
     {
-      "name": "Player1",
-      "score": 1200,
-      "userId": "user_123",
-      "date": "2026-05-01T11:31:35.816Z"
+      "id": "user_tq4rjfgq0",
+      "username": "Madhavan20906",
+      "email": "madhavan20906@gmail.com",
+      "password": "$2b$10$ucZcP6LnM/iR5SV2WzGMmeU25aQvZeLeLo0pgLPGMJx5bv/bNBcU6",
+      "data": {
+        "coins": 25,
+        "highDistance": 455,
+        "highCoins": 4,
+        "unlockedAvatars": [
+          "neon_core",
+          "knight"
+        ],
+        "unlockedSkateboards": [
+          "basic_board"
+        ],
+        "lastUpdated": "2026-05-05T12:02:35.707Z"
+      },
+      "createdAt": "2026-05-05T11:40:24.181Z"
+    },
+    {
+      "id": "user_2zqhshlu8",
+      "username": "Maddy",
+      "email": "madhavanp.cse2024@citchennai.net",
+      "password": "$2b$10$rD9bMorWTbbW8oxISBSHae9fpqXHACtmklx3YHWlfV6ovkeX1ViAO",
+      "data": {
+        "coins": 0,
+        "highDistance": 0,
+        "highCoins": 0,
+        "unlockedAvatars": [
+          "neon_core"
+        ],
+        "unlockedSkateboards": [
+          "basic_board"
+        ]
+      },
+      "createdAt": "2026-05-06T05:14:17.011Z"
     }
   ],
-  "users": {
-    "user_123": {
-      "coins": 500,
-      "unlockedAvatars": [
-        "neon_core",
-        "gold_striker"
-      ],
-      "lastUpdated": "2026-05-01T11:31:35.828Z"
-    },
-    "user_1cr4jaink": {
-      "coins": 275,
-      "unlockedAvatars": [
-        "neon_core",
-        "knight"
-      ],
-      "unlockedSkateboards": [
-        "basic_board"
-      ],
-      "highScore": 709,
-      "playerName": "Madhavan",
-      "lastUpdated": "2026-05-01T11:36:36.675Z"
-    }
+  "leaderboard": {
+    "distance": [
+      {
+        "userId": "user_tq4rjfgq0",
+        "username": "Madhavan20906",
+        "value": 455,
+        "date": "2026-05-05T11:40:51.584Z"
+      }
+    ],
+    "coins": [
+      {
+        "userId": "user_tq4rjfgq0",
+        "username": "Madhavan20906",
+        "value": 4,
+        "date": "2026-05-05T12:02:35.707Z"
+      }
+    ]
   }
 }

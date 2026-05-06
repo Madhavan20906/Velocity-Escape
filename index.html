@@ -62,9 +62,13 @@
       <div id="leaderboard-menu" class="overlay hidden">
         <div class="menu-header-pro">
           <button id="back-from-leaderboard-btn" class="pause-box">←</button>
-          <div style="color: white; font-weight: 900; font-size: 1.2rem; flex-grow: 1; text-align: center; margin-right: 40px;">TOP RUNNERS</div>
+          <div style="color: white; font-weight: 900; font-size: 1.2rem; flex-grow: 1; text-align: center;">LEADERBOARD</div>
         </div>
         <div class="shop-content">
+          <div class="shop-tabs">
+            <button id="leaderboard-dist-tab" class="tab-btn active">DISTANCE</button>
+            <button id="leaderboard-coins-tab" class="tab-btn">COINS</button>
+          </div>
           <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 0.8rem; padding: 1rem; max-height: 80vh; overflow-y: auto;">
             <!-- Leaderboard items will be injected here -->
           </div>
@@ -80,10 +84,14 @@
           <button id="sidebar-avatar-btn" class="sidebar-link">AVATARS</button>
           <button id="sidebar-skateboard-btn" class="sidebar-link">SKATEBOARDS</button>
           <button id="sidebar-leaderboard-btn" class="sidebar-link">LEADERBOARD</button>
+          <div id="sidebar-auth-section">
+            <button id="sidebar-login-btn" class="sidebar-link" style="border-color: #00f2ff; color: #00f2ff;">LOGIN / SIGNUP</button>
+            <button id="sidebar-logout-btn" class="sidebar-link hidden" style="border-color: #ff4444; color: #ff4444;">LOGOUT</button>
+          </div>
           <div class="sidebar-divider" style="height: 1px; background: rgba(255,255,255,0.1); margin: 0.5rem 0;"></div>
           <div style="padding: 0.5rem;">
-            <label style="color: #888; font-size: 0.7rem; display: block; margin-bottom: 0.3rem;">PLAYER NAME</label>
-            <input type="text" id="player-name-input" placeholder="Neon Runner" style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 0.5rem; border-radius: 8px; font-family: 'Outfit', sans-serif;">
+            <label id="user-label" style="color: #888; font-size: 0.7rem; display: block; margin-bottom: 0.3rem;">GUEST MODE</label>
+            <div id="user-display-name" style="color: #fff; font-weight: 900; font-size: 1.2rem;">Neon Runner</div>
           </div>
         </div>
       </div>
@@ -137,6 +145,54 @@
             <button id="restart-btn" class="primary-btn-pro">REPLAY</button>
             <button id="menu-btn" class="secondary-btn-pro">HOME</button>
           </div>
+        </div>
+      </div>
+
+      <!-- Auth Modal -->
+      <div id="auth-modal" class="overlay hidden">
+        <div class="auth-card">
+          <button id="close-auth-btn" class="close-btn" style="position: absolute; top: 1.5rem; right: 1.5rem; font-size: 2rem; line-height: 1; z-index: 10;">×</button>
+          
+          <div class="auth-header">
+            <h2 id="auth-title">VELOCITY ESCAPE</h2>
+          </div>
+          
+          <div id="auth-welcome" class="auth-form">
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: 1rem;">Join the race and secure your spot on the global leaderboard!</p>
+            <button id="welcome-to-signup" class="auth-submit-btn">SIGN UP</button>
+            <button id="welcome-to-login" class="secondary-btn-pro" style="width: 100%; border-radius: 18px; padding: 1.2rem;">LOG IN</button>
+            <div class="auth-divider">OR</div>
+            <button id="guest-play-btn" class="guest-btn">PLAY AS GUEST</button>
+          </div>
+
+          <div id="signup-form" class="auth-form hidden">
+            <div class="auth-input-container">
+              <input type="text" id="signup-username" placeholder="Choose Username" class="auth-input">
+            </div>
+            <div class="auth-input-container">
+              <input type="email" id="signup-email" placeholder="Email Address" class="auth-input">
+            </div>
+            <div class="auth-input-container">
+              <input type="password" id="signup-password" placeholder="Create Password" class="auth-input">
+            </div>
+            <button id="signup-submit" class="auth-submit-btn">CREATE ACCOUNT</button>
+            <p class="auth-switch">Already have an account? <span id="switch-to-login">Login</span></p>
+          </div>
+
+          <div id="login-form" class="auth-form hidden">
+            <div class="auth-input-container">
+              <input type="text" id="login-credential" placeholder="Username or Email" class="auth-input">
+            </div>
+            <div class="auth-input-container">
+              <input type="password" id="login-password" placeholder="Password" class="auth-input">
+            </div>
+            <button id="login-submit" class="auth-submit-btn">LOG IN</button>
+            <p class="auth-switch">New runner? <span id="switch-to-signup">Sign up</span></p>
+          </div>
+          
+          <p class="auth-footer-note">
+            Guest mode scores are not saved to the global leaderboard.
+          </p>
         </div>
       </div>
 
