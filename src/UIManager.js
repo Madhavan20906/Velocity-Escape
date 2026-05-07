@@ -32,6 +32,10 @@ export class UIManager {
         this.coinsVal = document.getElementById('coins-val');
         this.scoreVal = document.getElementById('score-val');
         this.speedVal = document.getElementById('speed-val');
+        
+        this.powerupTimer = document.getElementById('powerup-timer');
+        this.powerupName = document.getElementById('powerup-name');
+        this.powerupTime = document.getElementById('powerup-time');
 
         // Sidebar and Tabs
         this.sidebar = document.getElementById('sidebar-menu');
@@ -40,7 +44,12 @@ export class UIManager {
         // Results
         this.finalScore = document.getElementById('final-score');
         this.finalCoins = document.getElementById('final-coins');
-        this.reviveBtn = document.getElementById('revive-btn');
+        this.finalGems  = document.getElementById('final-gems');
+        this.reviveBtn  = document.getElementById('revive-btn');
+
+        // HUD gem display
+        this.gemsVal = document.getElementById('gems-val');
+        this.totalGemsShop = document.getElementById('total-gems-shop');
 
         this.initEvents();
         this.updateMenuStats();
@@ -135,6 +144,12 @@ export class UIManager {
             this.renderShop();
         };
 
+        document.getElementById('upgrade-tab-btn').onclick = () => {
+            this.currentShopTab = 'UPGRADES';
+            this.updateTabs();
+            this.renderShop();
+        };
+
         // Pause overlay resume / quit buttons
         const pauseResume = document.getElementById('pause-resume-btn');
         const pauseQuit = document.getElementById('pause-quit-btn');
@@ -146,15 +161,16 @@ export class UIManager {
         };
 
         this.reviveBtn.onclick = () => {
+            const currentCost = 1000 * Math.pow(2, this.game.reviveCount);
             const total = StorageManager.getTotalCoins();
-            if (total >= CONFIG.REVIVE_COST) {
-                StorageManager.deductCoins(CONFIG.REVIVE_COST);
+            if (total >= currentCost) {
+                StorageManager.deductCoins(currentCost);
                 this.updateMenuStats();
                 this.game.revive();
                 this.gameOver.classList.add('hidden');
                 this.hud.classList.remove('hidden');
             } else {
-                this.showToast(`NEED ${CONFIG.REVIVE_COST - total} MORE!`);
+                this.showToast(`NEED ${currentCost - total} MORE COINS!`);
             }
         };
     }
@@ -264,6 +280,7 @@ export class UIManager {
         
         const label = document.getElementById('user-label');
         const name = document.getElementById('user-display-name');
+        const rank = document.getElementById('user-rank');
         
         if (isLoggedIn && user) {
             label.innerText = 'LOGGED IN AS';
@@ -273,6 +290,10 @@ export class UIManager {
             label.innerText = 'GUEST RUNNER';
             label.style.color = '#888';
             name.innerText = 'NEON ESCAPE';
+        }
+        
+        if (rank) {
+            rank.innerText = `RANK: ${StorageManager.getRank()}`;
         }
     }
 
@@ -337,20 +358,31 @@ export class UIManager {
     updateTabs() {
         const avatarTab = document.getElementById('avatar-tab-btn');
         const boardTab = document.getElementById('skateboard-tab-btn');
-        if (this.currentShopTab === 'AVATARS') {
-            avatarTab.classList.add('active');
-            boardTab.classList.remove('active');
-        } else {
-            avatarTab.classList.remove('active');
-            boardTab.classList.add('active');
-        }
+        const upgradeTab = document.getElementById('upgrade-tab-btn');
+        
+        avatarTab.classList.toggle('active', this.currentShopTab === 'AVATARS');
+        boardTab.classList.toggle('active', this.currentShopTab === 'SKATEBOARDS');
+        upgradeTab.classList.toggle('active', this.currentShopTab === 'UPGRADES');
     }
 
     updateMenuStats() {
         const coins = StorageManager.getTotalCoins();
+        const gems  = StorageManager.getTotalDiamonds();
         this.totalCoinsMenu.innerText = coins;
         this.totalCoinsShop.innerText = coins;
+        if (this.totalGemsShop) this.totalGemsShop.innerText = gems;
         this.highScoreMenu.innerText = StorageManager.getHighScore().toString().padStart(6, '0');
+
+        // Process completed missions + show reward toasts
+        const completed = StorageManager.processMissions();
+        completed.forEach(m => {
+            let rewardText = `MISSION DONE! +${m.reward} ●`;
+            if (m.gemReward > 0) rewardText += ` +${m.gemReward} 💎`;
+            this.showToast(rewardText);
+        });
+
+        this.renderMissions();
+        this.updateAuthStateUI();
     }
 
     getAvatarPreviewSVG(avatarId, colorHex) {
@@ -430,12 +462,87 @@ export class UIManager {
 
     renderShop() {
         this.avatarList.innerHTML = '';
-        const totalCoins = StorageManager.getTotalCoins();
         if (this.currentShopTab === 'AVATARS') {
             CONFIG.AVATARS.forEach(avatar => this.createShopCard(avatar, StorageManager.getUnlockedAvatars(), StorageManager.getSelectedAvatar(), 'AVATAR'));
-        } else {
+        } else if (this.currentShopTab === 'SKATEBOARDS') {
             CONFIG.SKATEBOARDS.forEach(board => this.createShopCard(board, StorageManager.getUnlockedSkateboards(), StorageManager.getSelectedSkateboard(), 'SKATEBOARD'));
+        } else {
+            this.renderUpgrades();
         }
+    }
+
+    renderUpgrades() {
+        this.avatarList.innerHTML = '';
+        CONFIG.UPGRADES.forEach(upgrade => {
+            const level = StorageManager.getUpgradeLevel(upgrade.id);
+            const isMax = level >= upgrade.maxLevel;
+            const cost = upgrade.cost * (level + 1);
+            
+            const card = document.createElement('div');
+            card.className = 'avatar-card';
+            card.style.padding = '1.5rem';
+            card.innerHTML = `
+                <div style="font-weight:900; color:#00f2ff; margin-bottom:0.5rem;">${upgrade.name}</div>
+                <div style="font-size:0.7rem; color:#888; margin-bottom:1rem;">LEVEL ${level} / ${upgrade.maxLevel}</div>
+                <div style="flex-grow:1; display:flex; gap:4px; margin-bottom:1rem;">
+                    ${Array.from({length: upgrade.maxLevel}).map((_, i) => `
+                        <div style="flex:1; height:6px; background:${i < level ? '#00f2ff' : 'rgba(255,255,255,0.1)'}; border-radius:3px;"></div>
+                    `).join('')}
+                </div>
+                <button class="primary-btn-pro" style="padding:0.6rem; font-size:0.8rem; width:100%; border-radius:8px; background:${isMax ? '#333' : '#f1c40f'}; color:${isMax ? '#888' : '#000'}; border:none; font-weight:bold;">
+                    ${isMax ? 'MAXED' : `${cost} ●`}
+                </button>
+            `;
+            
+            if (!isMax) {
+                card.querySelector('button').onclick = () => {
+                    if (StorageManager.getTotalCoins() >= cost) {
+                        StorageManager.deductCoins(cost);
+                        StorageManager.setUpgradeLevel(upgrade.id, level + 1);
+                        this.updateMenuStats();
+                        this.renderShop();
+                        this.showToast('UPGRADED!');
+                    } else {
+                        this.showToast(`NEED ${cost - StorageManager.getTotalCoins()} MORE!`);
+                    }
+                };
+            }
+            this.avatarList.appendChild(card);
+        });
+    }
+
+    renderMissions() {
+        const list = document.getElementById('mission-list');
+        if (!list) return;
+        list.innerHTML = '';
+
+        const activeMissions = StorageManager.getActiveMissions();
+        activeMissions.forEach(mission => {
+            const progress = StorageManager.getMissionProgressById(mission.id);
+            const perc = Math.min(100, (progress / mission.goal) * 100);
+            const isDone = progress >= mission.goal;
+
+            const item = document.createElement('div');
+            item.style.cssText = `background:rgba(255,255,255,0.05); padding:0.6rem; border-radius:8px; border:1px solid ${isDone ? '#00ffaa44' : 'rgba(255,255,255,0.1)'};`;
+
+            const gemRewardHtml = mission.gemReward > 0
+                ? `<span style="color:#e879f9; margin-left:4px;">+${mission.gemReward}💎</span>` : '';
+
+            item.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                    <span style="color:${isDone ? '#00ffaa' : '#fff'}; font-size:0.65rem;">${mission.text}</span>
+                    <span class="mission-badge ${mission.difficulty}">${mission.difficulty}</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:0.6rem; margin-bottom:4px;">
+                    <span style="color:#f1c40f;">+${mission.reward}●${gemRewardHtml}</span>
+                    <span style="color:#888;">${isDone ? 'DONE ✓' : `${Math.min(Math.floor(progress), mission.goal)}/${mission.goal}`}</span>
+                </div>
+                <div style="height:4px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden;">
+                    <div style="width:${perc}%; height:100%; background:${isDone ? '#00ffaa' : '#00f2ff'};"></div>
+                </div>
+            `;
+            list.appendChild(item);
+        });
     }
 
     createShopCard(item, unlockedList, selectedId, type) {
@@ -481,18 +588,40 @@ export class UIManager {
     startGame() { this.mainMenu.classList.add('hidden'); this.hud.classList.remove('hidden'); this.game.start(); }
     restartGame() { this.gameOver.classList.add('hidden'); this.hud.classList.remove('hidden'); this.game.reset(); }
 
-    showGameOver(score, coins) {
+    showGameOver(score, coins, gems = 0) {
         this.hud.classList.add('hidden');
         this.gameOver.classList.remove('hidden');
         this.finalScore.innerText = Math.floor(score).toString().padStart(6, '0');
         this.finalCoins.innerText = coins;
+        if (this.finalGems) this.finalGems.innerText = gems;
+
+        // Check if it's a high score
+        const titleEl = this.gameOver.querySelector('.subway-title');
+        const prevBest = StorageManager.getHighScore();
+        if (titleEl) {
+            titleEl.innerText = Math.floor(score) >= prevBest ? 'HIGH SCORE!' : 'GAME OVER';
+        }
+        
+        const currentCost = 1000 * Math.pow(2, this.game.reviveCount);
+        const totalCoins = StorageManager.getTotalCoins();
+        if (this.reviveBtn) {
+            this.reviveBtn.innerText = `REVIVE (${currentCost} ●)`;
+            // Visually indicate if not enough coins
+            if (totalCoins < currentCost) {
+                this.reviveBtn.style.opacity = '0.55';
+            } else {
+                this.reviveBtn.style.opacity = '1';
+            }
+        }
+
         this.updateMenuStats();
     }
 
-    updateHUD(speed, score, coins) {
+    updateHUD(speed, score, coins, gems = 0) {
         this.scoreVal.innerText = Math.floor(score).toString().padStart(6, '0');
         this.coinsVal.innerText = coins;
         if (this.speedVal) this.speedVal.innerText = Math.floor(speed);
+        if (this.gemsVal) this.gemsVal.innerText = gems;
     }
 
     showPauseOverlay() { const el = document.getElementById('pause-overlay'); if (el) el.classList.remove('hidden'); }
@@ -500,12 +629,36 @@ export class UIManager {
 
     showSpeedBoost(label, isPositive) {
         let el = document.getElementById('speed-boost-popup');
-        if (!el) { el = document.createElement('div'); el.id = 'speed-boost-popup'; document.getElementById('hud').appendChild(el); }
+        if (el) {
+            const newEl = el.cloneNode(true);
+            el.parentNode.replaceChild(newEl, el);
+            el = newEl;
+        } else {
+            el = document.createElement('div');
+            el.id = 'speed-boost-popup';
+            document.getElementById('hud').appendChild(el);
+        }
+        
         el.textContent = label;
         el.style.cssText = `position: fixed; top: 25%; left: 50%; transform: translateX(-50%); font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 2rem; color: ${isPositive ? '#00ffaa' : '#ff4444'}; text-shadow: 0 0 20px ${isPositive ? '#00ffaa88' : '#ff444488'}; pointer-events: none; z-index: 500; animation: boostPop 1.2s ease-out forwards;`;
         el.classList.remove('hidden');
     }
     hideSpeedBoost() { const el = document.getElementById('speed-boost-popup'); if (el) el.classList.add('hidden'); }
+
+    updatePowerupTimer(type, time) {
+        if (!this.powerupTimer) return;
+        
+        if (time > 0) {
+            this.powerupTimer.classList.remove('hidden');
+            this.powerupName.innerText = type.toUpperCase();
+            this.powerupTime.innerText = Math.ceil(time) + 's';
+            
+            if (type === 'shield') this.powerupTimer.classList.add('shield-active');
+            else this.powerupTimer.classList.remove('shield-active');
+        } else {
+            this.powerupTimer.classList.add('hidden');
+        }
+    }
 
     showToast(msg) {
         let toast = document.getElementById('shop-toast');

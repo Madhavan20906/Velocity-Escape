@@ -215,6 +215,55 @@ export class Player {
             }
             this.container.rotation.x = -this.velocityY * 2;
         }
+
+        // Animate power-up visuals
+        if (this.shieldMesh) {
+            this.shieldMesh.rotation.y += 2 * deltaTime;
+            this.shieldMesh.rotation.z += 1 * deltaTime;
+            this.shieldMesh.scale.setScalar(1 + Math.sin(Date.now() * 0.01) * 0.05);
+        }
+        if (this.magnetMesh) {
+            this.magnetMesh.rotation.y -= 3 * deltaTime;
+            this.magnetMesh.scale.setScalar(1 + Math.cos(Date.now() * 0.01) * 0.1);
+        }
+    }
+
+    setShield(active) {
+        if (active && !this.shieldMesh) {
+            const geo = new THREE.SphereGeometry(1.5, 32, 32);
+            const mat = new THREE.MeshPhongMaterial({
+                color: 0xff0055,
+                transparent: true,
+                opacity: 0.3,
+                side: THREE.DoubleSide,
+                emissive: 0xff0055,
+                emissiveIntensity: 0.5
+            });
+            this.shieldMesh = new THREE.Mesh(geo, mat);
+            this.shieldMesh.position.y = 1.2;
+            this.container.add(this.shieldMesh);
+        } else if (!active && this.shieldMesh) {
+            this.container.remove(this.shieldMesh);
+            this.shieldMesh = null;
+        }
+    }
+
+    setMagnet(active) {
+        if (active && !this.magnetMesh) {
+            const geo = new THREE.TorusGeometry(1.8, 0.05, 8, 32);
+            const mat = new THREE.MeshBasicMaterial({
+                color: 0x00f2ff,
+                transparent: true,
+                opacity: 0.6
+            });
+            this.magnetMesh = new THREE.Mesh(geo, mat);
+            this.magnetMesh.rotation.x = Math.PI / 2;
+            this.magnetMesh.position.y = 1.2;
+            this.container.add(this.magnetMesh);
+        } else if (!active && this.magnetMesh) {
+            this.container.remove(this.magnetMesh);
+            this.magnetMesh = null;
+        }
     }
 
     moveLeft() {

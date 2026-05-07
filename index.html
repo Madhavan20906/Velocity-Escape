@@ -48,11 +48,16 @@
             <span id="total-coins-shop">0</span>
             <span class="coin-icon-pro">●</span>
           </div>
+          <div class="currency-box" style="background:rgba(180,0,255,0.15); border-color:rgba(180,0,255,0.4);">
+            <span id="total-gems-shop">0</span>
+            <span class="gem-icon">💎</span>
+          </div>
         </div>
         <div class="shop-content">
           <div class="shop-tabs">
             <button id="avatar-tab-btn" class="tab-btn active">CHARACTERS</button>
             <button id="skateboard-tab-btn" class="tab-btn">BOARDS</button>
+            <button id="upgrade-tab-btn" class="tab-btn">UPGRADES</button>
           </div>
           <div id="avatar-list" class="avatar-grid-pro"></div>
         </div>
@@ -90,8 +95,16 @@
           </div>
           <div class="sidebar-divider" style="height: 1px; background: rgba(255,255,255,0.1); margin: 0.5rem 0;"></div>
           <div style="padding: 0.5rem;">
+            <div style="color: #00f2ff; font-weight: 900; font-size: 0.7rem; margin-bottom: 0.5rem;">MISSIONS</div>
+            <div id="mission-list" style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <!-- Missions will be injected here -->
+            </div>
+          </div>
+          <div class="sidebar-divider" style="height: 1px; background: rgba(255,255,255,0.1); margin: 0.5rem 0;"></div>
+          <div style="padding: 0.5rem;">
             <label id="user-label" style="color: #888; font-size: 0.7rem; display: block; margin-bottom: 0.3rem;">GUEST MODE</label>
             <div id="user-display-name" style="color: #fff; font-weight: 900; font-size: 1.2rem;">Neon Runner</div>
+            <div id="user-rank" style="color: #f1c40f; font-size: 0.7rem; font-weight: 900; margin-top: 0.2rem;">RANK: ROOKIE</div>
           </div>
         </div>
       </div>
@@ -106,13 +119,20 @@
           </div>
         </div>
         <div class="hud-right">
-          <div class="multiplier">x30</div>
+          <div id="powerup-timer" class="powerup-timer hidden">
+            <span id="powerup-name">MAGNET</span>
+            <span id="powerup-time">20s</span>
+          </div>
           <div class="score-box">
             <span id="score-val">000000</span>
           </div>
           <div class="coin-box">
             <span id="coins-val">0</span>
             <span class="coin-icon-pro">●</span>
+          </div>
+          <div class="gem-box">
+            <span id="gems-val">0</span>
+            <span class="gem-icon">💎</span>
           </div>
         </div>
       </div>
@@ -139,6 +159,10 @@
               <div class="label">COINS</div>
               <div id="final-coins" class="val">0</div>
             </div>
+            <div class="res-item">
+              <div class="label">💎 GEMS</div>
+              <div id="final-gems" class="val" style="color:#cc00ff;">0</div>
+            </div>
           </div>
           <div class="action-row">
             <button id="revive-btn" class="primary-btn-pro" style="background: #e74c3c; color: white">REVIVE (100 ●)</button>
@@ -150,6 +174,11 @@
 
       <!-- Auth Modal -->
       <div id="auth-modal" class="overlay hidden">
+        <!-- Decorative Background Elements -->
+        <div class="auth-bg-orb orb-1"></div>
+        <div class="auth-bg-orb orb-2"></div>
+        <div class="auth-bg-orb orb-3"></div>
+
         <div class="auth-card">
           <button id="close-auth-btn" class="close-btn" style="position: absolute; top: 1.5rem; right: 1.5rem; font-size: 2rem; line-height: 1; z-index: 10;">×</button>
           
